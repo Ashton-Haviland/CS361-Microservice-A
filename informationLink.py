@@ -5,7 +5,7 @@ import time
 # Set up ZeroMQ context and socket
 context = zmq.Context()
 socket = context.socket(zmq.REP)
-socket.bind("tcp://*:5555")
+socket.bind("tcp://localhost:5555")
 
 print("Wikipedia microservice listening on port 5555")
 
@@ -17,7 +17,7 @@ while True:
 
     # Query Wikipedia API for page type, if no page found, return not found
     search = wikipedia.suggest(request)
-    if search == None:
+    if search == "None":
         socket.send_string("not found")
         continue
 
@@ -31,10 +31,14 @@ while True:
     # Query Wikipedia API for summary or image
     if type == "summary":
         # if receive request for summary, return summary up to 10 sentences.
-        socket.send_string(wikipedia.summary(search, sentences=10))
+        socket.send_string(wikipedia.summary(request))
+        continue
     elif type == "photo":
-        photos = wikipedia.images(search)
-        if len(photos) > 0:
-            socket.send_string(photos[0])
+        page = wikipedia.page(title=request)
+        photos = (wikipedia.page(request).images[0])
+        if len(photos) >= 1:
+            socket.send_string(wikipedia.page(request).images[0])
+            continue
     else:
         socket.send_string("Invalid request")
+        continue

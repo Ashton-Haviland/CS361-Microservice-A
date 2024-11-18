@@ -28,9 +28,8 @@ if response == "what type?":
     # Receive final response from microservice
     response = socket.recv_string()
     print(f"Brief Summary of Albert Einstein: {response}")
-    exit()
 
-## EVERYTHING AGAIN TO SHOW IMAGES 
+# EVERYTHING AGAIN TO SHOW IMAGES
 # Send request to microservice
 time.sleep(1)
 request = "Albert Einstein"
